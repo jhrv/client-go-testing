@@ -4,12 +4,10 @@ import (
 	"flag"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
-	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	//metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"fmt"
 )
-
-const Port = ":8081"
 
 func main() {
 	kubeconfig := flag.String("kubeconfig", "", "Path to a kubeconfig file")
@@ -18,6 +16,8 @@ func main() {
 
 	if *kubeconfig == "" {
 		panic("no kubeconfig provided")
+	} else {
+		fmt.Println("Using kubeconfig:", *kubeconfig)
 	}
 
 	clientSet := newClientSet(*kubeconfig)
@@ -26,13 +26,7 @@ func main() {
 }
 
 func testing(clientset kubernetes.Interface) {
-	configMap, err := clientset.CoreV1().ConfigMaps("default").Get("nais-alerts", metaV1.GetOptions{})
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("configMap", configMap)
+	//TODO
 }
 
 func newClientSet(kubeconfig string) kubernetes.Interface {
