@@ -3,3 +3,5 @@ vendor/
 /scratch.yaml
 *.iml
 *.swp
+test
+test.yml

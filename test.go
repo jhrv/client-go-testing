@@ -3,11 +3,9 @@ package main
 import (
 	"flag"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/golang/glog"
 	"fmt"
 )
 
@@ -18,30 +16,27 @@ func main() {
 
 	flag.Parse()
 
+	if *kubeconfig == "" {
+		panic("no kubeconfig provided")
+	}
+
 	clientSet := newClientSet(*kubeconfig)
 
-	configMap, err := clientSet.CoreV1().ConfigMaps("default").Get("nais-alerts", metaV1.GetOptions{})
+	testing(clientSet)
+}
+
+func testing(clientset kubernetes.Interface) {
+	configMap, err := clientset.CoreV1().ConfigMaps("default").Get("nais-alerts", metaV1.GetOptions{})
 
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("configmap", configMap)
+	fmt.Println("configMap", configMap)
 }
 
-// returns config using kubeconfig if provided, else from cluster context
 func newClientSet(kubeconfig string) kubernetes.Interface {
-
-	var config *rest.Config
-	var err error
-
-	if kubeconfig != "" {
-		glog.Infof("using provided kubeconfig")
-		config, err = clientcmd.BuildConfigFromFlags("", kubeconfig)
-	} else {
-		glog.Infof("no kubeconfig provided, assuming we are running inside a cluster")
-		config, err = rest.InClusterConfig()
-	}
+	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
 
 	if err != nil {
 		panic(err.Error())
