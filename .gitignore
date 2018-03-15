@@ -1,9 +1,5 @@
 vendor/
 .idea/
 /scratch.yaml
-naisd.iml
-/naisd
-/cli/nais
-/nais
-naisd-service-nodeport.yaml
+*.iml
 *.swp

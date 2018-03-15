@@ -20,15 +20,13 @@ func main() {
 
 	clientSet := newClientSet(*kubeconfig)
 
-	podList, err := clientSet.CoreV1().Pods("default").List(metaV1.ListOptions{})
+	configMap, err := clientSet.CoreV1().ConfigMaps("default").Get("nais-alerts", metaV1.GetOptions{})
 
 	if err != nil {
 		panic(err)
 	}
 
-	for _,pod := range podList.Items {
-		fmt.Println(pod.Name)
-	}
+	fmt.Println("configmap", configMap)
 }
 
 // returns config using kubeconfig if provided, else from cluster context
